@@ -6,28 +6,34 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-class Button extends JButton {
+class GridButton extends JButton {
     private int index;
-    private boolean clicked; //Vrai si le bouton a déjà été cliqué
+    private boolean clicked; // Vrai si le bouton a déjà été cliqué
     private GUI gui;
 
-    public Button(GUI gui, int index) {
+    public GridButton(GUI gui, int index) {
         this.gui = gui;
         this.index = index;
         this.clicked = false;
 
         this.addActionListener(((ActionEvent e) -> {
-            if(!this.clicked) {
-                this.gui.buttonClicked(this.index);
-                this.setText("X");
-                this.clicked();
+            if (!this.clicked) {
+                this.clicked = true;
+                this.setEnabled(false);
+                this.gui.buttonClicked(this);
             }
         }));
     }
 
     public boolean isClicked() {
-        return clicked;
+        return this.clicked;
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 
     public void clicked() {
@@ -44,67 +50,70 @@ class Button extends JButton {
 
 class GUI extends JFrame {
 
-    private Client client;
+    private GridButton[] buttons;
 
-    private Button[] buttons;
-    
     private void initButtons() {
-        buttons = new Button[9];
-        for(int i = 0; i < 9; i++)
-            buttons[i] = new Button(this, i);
+        buttons = new GridButton[9];
+        for (int i = 0; i < 9; i++)
+            buttons[i] = new GridButton(this, i);
     }
 
-
     private void initGrid(Container c) {
-        c.setLayout(new GridLayout(3,3));
-        for(JButton button : buttons)
+        c.setLayout(new GridLayout(3, 3));
+        for (JButton button : buttons)
             c.add(button);
     }
 
-
-    public GUI(Client client){
+    public GUI() {
         super("Morpion");
-
-        this.client = client;
 
         JMenuBar menu = new JMenuBar();
         menu.add(new JMenu("Restart"));
 
-
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent ev) {
+                System.out.println("Game OVER LOOOOOSER !");
+                System.exit(0);
+            }
+        });
         this.setJMenuBar(menu);
-        this.setSize(400,400);
+        this.setSize(400, 400);
         this.initButtons();
-        this.initGrid(this.getContentPane());; 
+        this.initGrid(this.getContentPane());
+        ;
 
         this.setVisible(true);
     }
 
-
     public void serverButtonClicked(int index_button) {
         buttons[index_button].setText("O");
         buttons[index_button].clicked();
+
     }
 
-    void buttonClicked(int index) {
-        //TODO appeler le client
+    void buttonClicked(GridButton button) {
+        button.setText("X");
+        if(!Client.buttonClicked(button.getIndex()))
+            button.reset();
+
     }
 
     public void display_waitingForServer() {
-        for(Button b : buttons) {
+        for (GridButton b : buttons) {
             b.setVisible(false);
         }
     }
 
     public void display_waitingForClient() {
-        for(Button b : buttons) {
-            if(!b.isClicked())
+        for (GridButton b : buttons) {
+            if (!b.isClicked())
                 b.setVisible(true);
         }
     }
 
     public void reset() {
-        for(Button b : buttons) {
+        for (GridButton b : buttons) {
             b.reset();
         }
     }
