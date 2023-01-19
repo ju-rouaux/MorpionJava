@@ -1,7 +1,7 @@
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.ArrayList;
-import java.lang.Math;
+import java.util.Random;
 
 class TicTacToe extends UnicastRemoteObject implements ServerInterface {
 
@@ -63,11 +63,11 @@ class TicTacToe extends UnicastRemoteObject implements ServerInterface {
      * @return
      */
     public int connect() throws RemoteException {
-        System.out.println("Nombre de joueur : "+players.size());
         if(players.size() >= 2)
             return -1;
 
-        players.add((int) Math.random()*10000);
+        players.add((int)Math.floor(Math.random()*1000));
+
         return players.get(players.size()-1);  
     }  
 

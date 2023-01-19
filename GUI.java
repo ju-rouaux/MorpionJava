@@ -158,12 +158,18 @@ class GUI extends JFrame {
 
     }
 
+    void DisplayErrorDialog(String Title, String body, int errorCode) {
+
+        DialogBox dial = new DialogBox(this);
+        
+        dial.setDialogBox("Erreur", body, errorCode);
+        dial.displayMessageDialogBox(dial.ERROR_MESSAGE);
+    }
+
     void exitGame()
     {
-        DialogBox dial = new DialogBox(this);
-        dial.setDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",0);
-        dial.displayDialogBox();
-        //Syste Client.ClientDisconect();
+        DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
+        System.out.println(Client.ClientDisconect());
     }
 
     public void display_waitingForServer() {
