@@ -1,26 +1,26 @@
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import java.awt.Dimension;
 
-public class DialogBox {
+public class DialogBox extends JOptionPane{
     private JFrame parentFrame;
     private int code;
-    private String Title;
-    private String Body;
+    private String title;
+    private String body;
+    private int DialogBoxType;
 
-    public enum DialogBoxTypes {
-        MESSAGE, QUESTION, INFORMATION, WARNING, ERROR
-    }
-    public  DialogBoxTypes Dialogtypes;
-    private int Dialogtype;
+    int MESSAGE = -1;
+    int QUESTION = 3;
+    int INFORMATION = 1;
+    int WARNING = 2;
+    int ERROR = 0;
 
     public DialogBox(JFrame parent) {
         this.parentFrame = parent;
         this.code = 0;
-        this.Title = null;
-        this.Body = null;
-        this.Dialogtype = -2;
+        this.title = null;
+        this.body = null;
+        this.DialogBoxType = -2;
     }
 
     /**
@@ -35,56 +35,46 @@ public class DialogBox {
      * 
      */
 
-    public void setDialogBoxType(DialogBoxTypes type) {
-        switch(type){
-            case MESSAGE:
-            Dialogtype = -1;
-            break;
-
-            case ERROR:
-            Dialogtype = 0;
-            break;
-
-            case INFORMATION:
-            Dialogtype = 1;
-            break;
-
-            case WARNING:
-            Dialogtype = 2;
-            break;
-
-            case QUESTION:
-            Dialogtype = 3;
-            break;
-        }
+    public void setDialogBoxType(int type) {
+        this.DialogBoxType = type;
     }
 
     /**
      * Sets all the parameters of the DialogBox. You must specify one of the
      * following choices:
      *
-     * @param Title       The title string for the dialog
-     * @param Body        The body string for the dialog
+     * @param title       The title string for the dialog
+     * @param body        The body string for the dialog
      * @param code        A code to display, in order to give user further information
      */
-    public void setDialogBox(String Title, String Body, int code) {
+    public void setDialogBox(String title, String body, int code) {
         this.code = code;
-        this.Title = Title;
-        this.Body = Body;
+        this.title = title;
+        this.body = body;
     }
 
-    public void displayDialogBox() {
-        JOptionPane d = new JOptionPane();
-        //d.setDialogBoxType(d.DialogBoxTypes.MESSAGE);
-        d.showMessageDialog(this.parentFrame, this.Body, this.Title, Dialogtype);
-        d.setPreferredSize(new Dimension(1,2));
+    public void displayMessageDialogBox(int messageType) {
+        JOptionPane dialog = new JOptionPane();
+        if (this.code != 0)
+            this.body += "\nError code : "+this.code;
+
+        dialog.showMessageDialog(this.parentFrame, this.body, this.title, messageType);
+    }
+
+    public int displayConfirmDialogBox(int optionType) {
+        JOptionPane dialog = new JOptionPane();
+        if (this.code != 0)
+            this.body += "\nError code : "+this.code;
+
+        return dialog.showConfirmDialog(this.parentFrame, this.body, this.title, optionType);
     }
 
     public static void main(final String[] args) {
         final JFrame parent = new JFrame();
 
         DialogBox dial = new DialogBox(parent);
+        
         dial.setDialogBox("Hello World !", "lorem ipsum", 0);
-        dial.displayDialogBox();
+        dial.displayMessageDialogBox(QUESTION_MESSAGE);
     }
 }

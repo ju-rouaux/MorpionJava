@@ -78,34 +78,16 @@ class GUI extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
                 System.out.println("Game OVER");
-                
+                exitGame();
                 System.exit(0);
             }
         });
         this.setJMenuBar(menu);
         this.setSize(400, 400);
+
         this.initButtons();
         this.initGrid(this.getContentPane());
 
-        JPanel main_pannel = new JPanel();
-        JPanel left_pannel = new JPanel();
-        JPanel right_pannel = new JPanel();
-
-        GridBagLayout main_layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
-
-        main_pannel.setLayout(main_layout);
-
-        c.gridx = 0;
-        c.gridy = 0;
-        main_pannel.add(left_pannel, c);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        main_pannel.add(right_pannel, c);
-
-        this.add(main_pannel);
 
         this.setVisible(true);
     }
@@ -123,12 +105,18 @@ class GUI extends JFrame {
 
     }
 
+    void DisplayErrorDialog(String Title, String body, int errorCode) {
+
+        DialogBox dial = new DialogBox(this);
+        
+        dial.setDialogBox("Erreur", body, errorCode);
+        dial.displayMessageDialogBox(dial.ERROR_MESSAGE);
+    }
+
     void exitGame()
     {
-        DialogBox dial = new DialogBox(this);
-        dial.setDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",0);
-        dial.displayDialogBox();
-        //Syste Client.ClientDisconect();
+        DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
+        System.out.println(Client.ClientDisconect());
     }
 
     public void display_waitingForServer() {
