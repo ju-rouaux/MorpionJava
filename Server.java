@@ -63,10 +63,11 @@ class TicTacToe extends UnicastRemoteObject implements ServerInterface {
      * @return
      */
     public int connect() throws RemoteException {
-        if(players.size() == 2)
+        System.out.println("Nombre de joueur : "+players.size());
+        if(players.size() >= 2)
             return -1;
 
-        players.set(players.size(), (int) Math.random()*10000);
+        players.add((int) Math.random()*10000);
         return players.get(players.size()-1);  
     }  
 

@@ -19,12 +19,30 @@ public class Client {
         return return_value;
     }
 
+    public static boolean ClientDisconect(){
+        boolean return_value = false;
+        try {
+            return_value = game.disconnect(clientId);
+        }
+        catch (Exception e) {
+            System.out.println("Le serveur n'a pas pu deconnecter le joueur" + clientId);
+        }
+
+        return return_value;
+    }
+
     public static void main(String[] args) {
         new GUI();
 
         try {
-            game = (ServerInterface) Naming.lookup("rmi:///Server");
-            //clientId = game.connect();
+            game = (ServerInterface) Naming.lookup("rmi:///TicTacToe");
+            try {
+            clientId = game.connect();
+            } catch(Exception e) {
+                System.out.println("Erreur connect");
+                System.out.println(e);
+                System.exit(-1);
+            }
         } catch (Exception e) {
             System.out.println("Erreur d'accès à l'objet distant.");
             System.out.println(e);
@@ -36,9 +54,6 @@ public class Client {
             System.out.println("Impossible de rejoindre la partie, car il y a déjà deux joueurs");
             System.exit(-1);
         }
-
-
-        
 
     }
 }
