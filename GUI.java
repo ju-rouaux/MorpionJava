@@ -1,15 +1,16 @@
-// import javax.swing.JFrame;
-// import javax.swing.JMenu;
-// import javax.swing.JMenuBar;
-// import javax.swing.WindowConstants;
-// import java.awt.Container;
-// import java.awt.GridLayout;
-// import javax.swing.JButton;
-// import java.awt.event.ActionEvent;
-// import java.awt.event.WindowAdapter;
-// import java.awt.event.WindowEvent;
-// import javax.swing.BoxLayout;
-import javax.swing.*; //Pour faciliter le développement
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.WindowConstants;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.border.*;
+import javax.swing.JSeparator;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -54,58 +55,92 @@ class GridButton extends JButton {
 
 class GUI extends JFrame {
 
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
+
+    private JLabel message;
+
     private GridButton[] buttons;
 
-    private void initButtons() {
+
+
+    private JPanel buildGrid() {
+        JPanel grid = new JPanel();
+
         buttons = new GridButton[9];
         for (int i = 0; i < 9; i++)
             buttons[i] = new GridButton(this, i);
-    }
 
-    private void initGrid(Container c) {
-        c.setLayout(new GridLayout(3, 3));
+        grid.setPreferredSize(new Dimension(HEIGHT, HEIGHT));
+        
+        grid.setLayout(new GridLayout(3, 3));
         for (JButton button : buttons)
-            c.add(button);
+            grid.add(button);
+
+        return grid;
     }
 
     public GUI() {
-        super("Morpion");
+        super("TicTacToe");
 
-        JMenuBar menu = new JMenuBar();
-        menu.add(new JMenu("Restart"));
+        this.setResizable(false);
+        this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.LINE_AXIS));
 
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent ev) {
-                System.out.println("Game OVER");
-                
-                System.exit(0);
-            }
-        });
-        this.setJMenuBar(menu);
-        this.setSize(400, 400);
-        this.initButtons();
-        this.initGrid(this.getContentPane());
+        // this.addWindowListener(new WindowAdapter() {
+        //     public void windowClosing(WindowEvent ev) {
+        //         System.out.println("Game OVER");
+        //         exitGame();
+        //         System.exit(0);
+        //     }
+        // });
 
-        JPanel main_pannel = new JPanel();
-        JPanel left_pannel = new JPanel();
-        JPanel right_pannel = new JPanel();
 
-        GridBagLayout main_layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+        //Menu
+        Box left_box = new Box(BoxLayout.Y_AXIS);
+        left_box.setAlignmentY(CENTER_ALIGNMENT);
 
-        main_pannel.setLayout(main_layout);
+        left_box.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));
+        //left_box.setBorder(BorderFactory.createLineBorder(Color.black)); //pour debug
+        
+        JLabel title = new JLabel("<html><h1>TicTacToe</h1></html>", JLabel.CENTER);
+        title.setAlignmentX(CENTER_ALIGNMENT);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        main_pannel.add(left_pannel, c);
+        message = new JLabel("<html><p>En attente des joueurs</p></html>", JLabel.CENTER);
+        message.setAlignmentX(CENTER_ALIGNMENT);
+        
+        left_box.add(title);
 
-        c.gridx = 1;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        main_pannel.add(right_pannel, c);
+        left_box.add(Box.createRigidArea(new Dimension(0, 80)));
 
-        this.add(main_pannel);
+        left_box.add(message);
+
+        left_box.add(Box.createRigidArea(new Dimension(0, 120)));
+
+
+        JButton button_X = new JButton("JOUER \"X\"");
+        button_X.setAlignmentX(CENTER_ALIGNMENT);
+        left_box.add(button_X);
+
+        left_box.add(Box.createRigidArea(new Dimension(10, 10)));
+
+        JButton button_O = new JButton("JOUER \"O\"");
+        button_O.setAlignmentX(CENTER_ALIGNMENT);
+        left_box.add(button_O);
+
+
+
+        this.add(left_box);
+        
+
+        //Grille
+        JPanel grid = buildGrid();
+        grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.add(grid);
+        
+        
+
+        this.pack();
 
         this.setVisible(true);
     }
