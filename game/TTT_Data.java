@@ -1,6 +1,8 @@
 package game;
 
-public class TTT_Data {
+import java.io.Serializable;
+
+public class TTT_Data implements Serializable {
 
     /**
      * État de la partie.

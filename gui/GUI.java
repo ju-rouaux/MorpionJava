@@ -12,8 +12,10 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.*;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 class GridButton extends JButton {
     private int index;
@@ -154,8 +156,8 @@ public class GUI extends JFrame {
 
     void buttonClicked(GridButton button) {
         button.setText("X");
-        if(!Client.buttonClicked(button.getIndex()))
-            button.reset();
+        // if(!Client.buttonClicked(button.getIndex()))
+        //     button.reset();
 
     }
 
@@ -170,7 +172,7 @@ public class GUI extends JFrame {
     void exitGame()
     {
         DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
-        System.out.println(Client.ClientDisconect());
+        //System.out.println(Client.ClientDisconect());
     }
 
     public void display_waitingForServer() {
