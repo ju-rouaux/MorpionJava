@@ -1,3 +1,5 @@
+package gui;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
@@ -9,7 +11,6 @@ import javax.swing.JSeparator;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.*;
-import javax.swing.JSeparator;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -53,7 +54,7 @@ class GridButton extends JButton {
     }
 }
 
-class GUI extends JFrame {
+public class GUI extends JFrame {
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 400;
@@ -87,13 +88,13 @@ class GUI extends JFrame {
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.LINE_AXIS));
 
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        // this.addWindowListener(new WindowAdapter() {
-        //     public void windowClosing(WindowEvent ev) {
-        //         System.out.println("Game OVER");
-        //         exitGame();
-        //         System.exit(0);
-        //     }
-        // });
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent ev) {
+                System.out.println("Game OVER");
+                exitGame();
+                System.exit(0);
+            }
+        });
 
 
         //Menu

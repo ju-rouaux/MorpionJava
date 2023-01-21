@@ -1,11 +1,15 @@
 import java.rmi.*;
 
+import game.TTT_Data;
+import game.TTT_Interface;
+import gui.GUI;
+
 public class Client {
 
     private Client() {
     }
 
-    private static ServerInterface game;
+    private static TTT_Interface game;
     private static int clientId;
     private static GUI gui;
 
@@ -39,7 +43,7 @@ public class Client {
         new GUI();
 
         try {
-            game = (ServerInterface) Naming.lookup("rmi:///TicTacToe");
+            game = (TTT_Interface) Naming.lookup("rmi:///TicTacToe");
             clientId = game.connect();
             //TODO : Ajouter la gestion de l'erreur lors de la connexion (trop de joueurs ou autres)
         } catch (Exception e) {
@@ -57,7 +61,7 @@ public class Client {
         
         while (clientId != -1) {
             try {
-                TicTacToeData Data = game.fetchData(clientId);
+                TTT_Data Data = game.fetchData(clientId);
 
                 // if (!Data.opponent_connected) {
                 //    CallErrorDialog("Votre adversaire a été déconnecté, la partie est donc interrompue.",0);
