@@ -1,4 +1,6 @@
-import game.TicTacToe;
+package com.tictactoe;
+
+import com.tictactoe.game.TicTacToe;
 import java.rmi.Naming;
 
 public class Server {

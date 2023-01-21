@@ -1,4 +1,4 @@
-package game;
+package com.tictactoe.game;
 
 import java.io.Serializable;
 

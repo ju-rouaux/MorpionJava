@@ -1,4 +1,4 @@
-package gui;
+package com.tictactoe.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,71 +17,16 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-class GridButton extends JButton {
-    private int index;
-    private boolean clicked; // Vrai si le bouton a déjà été cliqué
-    private GUI gui;
 
-    public GridButton(GUI gui, int index) {
-        this.gui = gui;
-        this.index = index;
-        this.clicked = false;
-
-        this.addActionListener(((ActionEvent e) -> {
-            if (!this.clicked) {
-                this.clicked = true;
-                this.setEnabled(false);
-                this.gui.buttonClicked(this);
-            }
-        }));
-    }
-
-    public boolean isClicked() {
-        return this.clicked;
-    }
-
-    public int getIndex() {
-        return this.index;
-    }
-
-    public void clicked() {
-        this.clicked = true;
-        this.setEnabled(false);
-    }
-
-    public void reset() {
-        clicked = false;
-        this.setVisible(true);
-        this.setText("");
-    }
-}
 
 public class GUI extends JFrame {
 
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 400;
 
     private JLabel message;
 
-    private GridButton[] buttons;
 
-
-
-    private JPanel buildGrid() {
-        JPanel grid = new JPanel();
-
-        buttons = new GridButton[9];
-        for (int i = 0; i < 9; i++)
-            buttons[i] = new GridButton(this, i);
-
-        grid.setPreferredSize(new Dimension(HEIGHT, HEIGHT));
-        
-        grid.setLayout(new GridLayout(3, 3));
-        for (JButton button : buttons)
-            grid.add(button);
-
-        return grid;
-    }
 
     public GUI() {
         super("TicTacToe");
@@ -109,7 +54,7 @@ public class GUI extends JFrame {
         JLabel title = new JLabel("<html><h1>TicTacToe</h1></html>", JLabel.CENTER);
         title.setAlignmentX(CENTER_ALIGNMENT);
 
-        message = new JLabel("<html><p>En attente des joueurs</p></html>", JLabel.CENTER);
+        message = new JLabel("<html><p>En attente des joueurs...</p></html>", JLabel.CENTER);
         message.setAlignmentX(CENTER_ALIGNMENT);
         
         left_box.add(title);
@@ -137,7 +82,8 @@ public class GUI extends JFrame {
         
 
         //Grille
-        JPanel grid = buildGrid();
+        System.out.println("AAA");
+        JPanel grid = new GridPannel();
         grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.add(grid);
         
@@ -148,18 +94,7 @@ public class GUI extends JFrame {
         this.setVisible(true);
     }
 
-    public void serverButtonClicked(int index_button) {
-        buttons[index_button].setText("O");
-        buttons[index_button].clicked();
 
-    }
-
-    void buttonClicked(GridButton button) {
-        button.setText("X");
-        // if(!Client.buttonClicked(button.getIndex()))
-        //     button.reset();
-
-    }
 
     void DisplayErrorDialog(String Title, String body, int errorCode) {
 
@@ -176,21 +111,14 @@ public class GUI extends JFrame {
     }
 
     public void display_waitingForServer() {
-        for (GridButton b : buttons) {
-            b.setVisible(false);
-        }
+        
     }
 
     public void display_waitingForClient() {
-        for (GridButton b : buttons) {
-            if (!b.isClicked())
-                b.setVisible(true);
-        }
+        
     }
 
     public void reset() {
-        for (GridButton b : buttons) {
-            b.reset();
-        }
+        
     }
 }

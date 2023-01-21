@@ -1,4 +1,4 @@
-package gui;
+package com.tictactoe.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

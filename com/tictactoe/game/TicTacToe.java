@@ -1,4 +1,4 @@
-package game;
+package com.tictactoe.game;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -14,10 +14,10 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
      * Permet au joueur de l'identifiant donné de joueur son tour, et actualise l'état général du jeu.
      * Le coup est ignoré s'il n'est pas autorisé.
      */
-    public void playTurn(int player_id, int cell_index) throws RemoteException {
+    public boolean playTurn(int player_id, int cell_index) throws RemoteException {
         //Vérifier si l'index est correct
         if(cell_index < 0 || cell_index >= 9 || this.data.grid[cell_index] != ' ')
-            return;
+            return false;
 
         //Vérifier si le joueur est autorisé à jouer et jouer le tour
         if((this.X_player_id == player_id) && (this.data.whoseTurn == 'X'))
@@ -25,7 +25,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
         else if((this.O_player_id == player_id) && (this.data.whoseTurn == 'O'))
                 this.data.grid[cell_index] = 'O';
         else
-            return; //Non autorisé
+            return false; //Non autorisé
 
         //Calculer si victoire
         int[] winningCombo = this.winningCombo();
@@ -40,6 +40,8 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
             else
                 this.data.setWinner(this.data.grid[winningCombo[0]], winningCombo);
         }
+
+        return true;
     }
 
     /**

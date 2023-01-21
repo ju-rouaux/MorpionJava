@@ -1,9 +1,11 @@
+package com.tictactoe;
+
 import java.rmi.Naming;
 
-import game.TTT_Data;
-import game.TTT_Interface;
-import static game.TTT_Data.State;
-import gui.GUI;
+import com.tictactoe.game.TTT_Data;
+import com.tictactoe.game.TTT_Interface;
+import static com.tictactoe.game.TTT_Data.State;
+import com.tictactoe.gui.GUI;
 
 public class Client {
 
@@ -11,20 +13,28 @@ public class Client {
     }
 
     private static TTT_Interface game;
-    private static int clientId;
+    private static TTT_Data game_data;
+    private static int client_id = -1;
+
     private static GUI gui;
 
-    // public static boolean buttonClicked(int index) {
-    //     boolean return_value = false;
+    public static boolean gridButtonClicked(int index) {
+        try {
+            return game.playTurn(client_id, index);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-    //     try {
-    //         return_value = game.playTurn(clientId, index);
-    //     } catch (Exception e) {
-    //         System.out.println("Le joueur n'a pas pu jouer à l'index " + index);
-    //     }
+        return false;
+    }
 
-    //     return return_value;
-    // }
+    public static void connectAsX() {
+
+    }
+
+    public static void connectAsO() {
+
+    }
 
     // public static boolean ClientDisconect() {
     //     boolean return_value = false;
@@ -46,18 +56,18 @@ public class Client {
         try {
             game = (TTT_Interface) Naming.lookup("rmi:///TicTacToe");
         } catch (Exception e) {
-            System.out.println("Erreur d'accès à l'objet distant.");
+            System.out.println("Erreur d'accès à l'objet distant :");
             System.out.println(e);
             System.exit(-1);
         }
 
-        System.out.println("Identifiant  : "+clientId);
+        System.out.println("Identifiant  : "+client_id);
         
         while (true) {
             try {
-                TTT_Data Data = game.fetchData();
+                game_data = game.fetchData();
             } catch (Exception e) {
-                System.out.println("Erreur de connection au serveur.");
+                System.out.println("Erreur de connection au serveur :");
                 System.out.println(e);
                 System.exit(-1);
             }
