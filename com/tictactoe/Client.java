@@ -72,7 +72,7 @@ public class Client {
     }
 
     public static void updateData() throws RemoteException {
-        TTT_Data data = game.fetchData();
+        game_data = game.fetchData();
     }
 
     // private static void CallErrorDialog(String body, int errorCode) {

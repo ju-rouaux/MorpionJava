@@ -127,8 +127,8 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
    
         //Test lignes
         for(int i = 0; i < 3; i++)
-            if(data.grid[i] != ' ' && (data.grid[i] == data.grid[i+1]) && (data.grid[i+1] == data.grid[i+2]))
-                return new int[] {i, i+1, i+2};
+            if(data.grid[i*3] != ' ' && (data.grid[i*3] == data.grid[(i*3)+1]) && (data.grid[(i*3)+1] == data.grid[(i*3)+2]))
+                return new int[] {i*3, (i*3)+1, (i*3)+2};
 
         //Test colonnes
         for(int j = 0; j < 3; j++)
