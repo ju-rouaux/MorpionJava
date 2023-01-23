@@ -81,6 +81,7 @@ public class TTT_Data implements Serializable {
     }
 
     void setStart() {
+        System.out.println("Commencer.");
         this.state = State.PLAYING;
         this.grid = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
         this.message = "Au joueur " + this.whoseTurn + " de jouer.";

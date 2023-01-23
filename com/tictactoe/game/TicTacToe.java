@@ -15,6 +15,8 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
      * Le coup est ignoré s'il n'est pas autorisé.
      */
     public boolean playTurn(int player_id, int cell_index) throws RemoteException {
+        System.out.println(player_id + " a joué en " + cell_index);
+
         //Vérifier si l'index est correct
         if(cell_index < 0 || cell_index >= 9 || this.data.grid[cell_index] != ' ')
             return false;
@@ -35,6 +37,8 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
 
         //Si fin de la partie
         if(winningCombo != null) {
+            this.disconnect(this.X_player_id);
+            this.disconnect(this.O_player_id);
             if(winningCombo[0] == -1) //Egalité
                 this.data.setDraw();
             else
@@ -123,18 +127,18 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
    
         //Test lignes
         for(int i = 0; i < 3; i++)
-            if((data.grid[i] == data.grid[i+1]) && (data.grid[i+1] == data.grid[i+2]))
-                return new int[] {i+1, i+2, i+3};
+            if(data.grid[i] != ' ' && (data.grid[i] == data.grid[i+1]) && (data.grid[i+1] == data.grid[i+2]))
+                return new int[] {i, i+1, i+2};
 
         //Test colonnes
         for(int j = 0; j < 3; j++)
-            if((data.grid[j] == data.grid[3+j]) && (data.grid[3+j] == data.grid[6+j]))
+            if(data.grid[j] != ' ' && (data.grid[j] == data.grid[3+j]) && (data.grid[3+j] == data.grid[6+j]))
                 return new int[] {j, 3+j, 6+j};
 
         //Test diagonales
-        if((data.grid[0] == data.grid[4]) && (data.grid[4] == data.grid[8]))
+        if(data.grid[0] != ' ' && (data.grid[0] == data.grid[4]) && (data.grid[4] == data.grid[8]))
             return new int[] {0, 4, 8};
-        if((data.grid[2] == data.grid[4]) && (data.grid[4] == data.grid[6]))
+        if(data.grid[2] != ' ' && (data.grid[2] == data.grid[4]) && (data.grid[4] == data.grid[6]))
             return new int[] {2, 4, 6};
 
         //Test d'égalité = grille pleine

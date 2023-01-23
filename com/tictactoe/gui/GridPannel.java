@@ -11,12 +11,26 @@ import java.awt.Dimension;
 
 import com.tictactoe.Client;
 
+class GridButton extends JButton {
+    private int index;
+    private GridPannel grid;
+
+    public GridButton(GridPannel grid, int index) {
+        this.grid = grid;
+        this.index = index;
+
+        this.addActionListener((ActionEvent e) -> {
+            this.setEnabled(false);
+            this.grid.buttonClicked(this.index);
+        });
+    }
+}
+
 class GridPannel extends JPanel {
     
     private GridButton[] buttons;
 
     GridPannel() {
-        System.out.println("BUUU");
         buttons = new GridButton[9];
         for (int i = 0; i < 9; i++)
             buttons[i] = new GridButton(this, i);
@@ -30,18 +44,18 @@ class GridPannel extends JPanel {
         this.resetGrid();
     }
 
+    void buttonClicked(int index) {
+        buttons[index].setEnabled(false);
+        if(!Client.gridButtonClicked(index))
+        buttons[index].setEnabled(true);
+    }
+
     public void resetGrid() {
         for(GridButton b : buttons) {
             b.setEnabled(false);
             b.setText("");
             b.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }
-    }
-
-    void buttonClicked(int index) {
-        buttons[index].setEnabled(false);
-        if(!Client.gridButtonClicked(index))
-            buttons[index].setEnabled(true);
     }
 
     /**
@@ -60,27 +74,12 @@ class GridPannel extends JPanel {
 
     public void deactivateAll() {
         for(JButton b : buttons)
-            b.setVisible(false);
+            b.setEnabled(false);
     }
 
-    public void activateCells(int cells[]) {
-        for(int index : cells)
-            buttons[index].setVisible(true);
+    public void activateCells(Integer cells[]) {
+        for(Integer index : cells)
+            buttons[index].setEnabled(true);
     }
 
-}
-
-class GridButton extends JButton {
-    private int index;
-    private GridPannel grid;
-
-    public GridButton(GridPannel grid, int index) {
-        this.grid = grid;
-        this.index = index;
-
-        this.addActionListener((ActionEvent e) -> {
-            this.setEnabled(false);
-            this.grid.buttonClicked(this.index);
-        });
-    }
 }

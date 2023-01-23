@@ -1,10 +1,12 @@
 package com.tictactoe;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.tictactoe.game.TTT_Data;
 import com.tictactoe.game.TTT_Interface;
-import static com.tictactoe.game.TTT_Data.State;
 import com.tictactoe.gui.GUI;
 
 public class Client {
@@ -21,37 +23,64 @@ public class Client {
     public static boolean gridButtonClicked(int index) {
         try {
             return game.playTurn(client_id, index);
-        } catch (Exception e) {
+        } catch (RemoteException e) {
             System.out.println(e);
         }
 
         return false;
     }
 
-    public static void connectAsX() {
+    public static boolean connectAsX() {
+        if(client_id != -1) //Déjà connecté
+            return false;
 
+        try {
+            client_id = game.connectAsX();
+            if(client_id != -1)
+                return true;
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("Un joueur joue déjà X");
+        return false;
     }
 
-    public static void connectAsO() {
+    public static boolean connectAsO() {
+        if(client_id != -1) //Déjà connecté
+            return false;
 
+        try {
+            client_id = game.connectAsO();
+            if(client_id != -1)
+                return true;
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+
+        System.out.println("Un joueur joue déjà O");
+        return false;
     }
 
-    // public static boolean ClientDisconect() {
-    //     boolean return_value = false;
-    //     try {
-    //         return_value = game.disconnect(clientId);
-    //     } catch (Exception e) {
-    //         System.out.println("Le serveur n'a pas pu deconnecter le joueur" + clientId);
-    //     }
+    public static void disconnect() {
+        try {
+            game.disconnect(client_id);
+        }
+        catch (RemoteException e) {
+            System.out.println(e);
+        }
+    }
 
-    //     return return_value;
-    // }
+    public static void updateData() throws RemoteException {
+        TTT_Data data = game.fetchData();
+    }
 
     // private static void CallErrorDialog(String body, int errorCode) {
     //     gui.DisplayErrorDialog("TictacToe Erreur",body,errorCode);
     // }
+
     public static void main(String[] args) {
-        new GUI();
+        gui = new GUI();
 
         try {
             game = (TTT_Interface) Naming.lookup("rmi:///TicTacToe");
@@ -65,13 +94,59 @@ public class Client {
         
         while (true) {
             try {
-                game_data = game.fetchData();
+                Thread.sleep(200);
+            }
+            catch (Exception e) {}
+
+            try {
+                updateData();
+                gui.setMessage(game_data.message);
+                
+                switch(game_data.state) {
+                    case WAITING:
+                        if(game_data.X_connected)
+                            gui.enable_X(false);
+                        else
+                            gui.enable_X(true);
+                        if(game_data.O_connected)
+                            gui.enable_O(false);
+                        else
+                            gui.enable_O(true);
+                        break;
+
+                    case PLAYING:
+                        gui.updateGridText(game_data.grid);
+                        ArrayList<Integer> activated = new ArrayList<>();
+
+                        //Vérifier si le joueur n'est pas autorisé à jouer
+                        if( client_id == -1 ||
+                          !((game_data.whoseTurn == 'O' && client_id >= 500) ||  // !(tour de O et joueur O)
+                          (game_data.whoseTurn == 'X' && client_id < 500))) {    // !(tour de X et joueur X)
+                            gui.deactivateAll();
+                            break;
+                        }
+
+                        for(int i = 0; i < 9; i++)
+                            if(game_data.grid[i] == ' ')
+                                activated.add(i);
+
+                        if(activated.size() > 0)
+                            gui.activateCells(activated.toArray(new Integer[0]));
+
+                        break;
+                    case VICTORY:
+                        gui.highlight(game_data.winningCombo);
+                        break;
+
+                    case DRAW:
+
+                }
+
             } catch (Exception e) {
                 System.out.println("Erreur de connection au serveur :");
                 System.out.println(e);
                 System.exit(-1);
             }
         }
-
     }
 }
