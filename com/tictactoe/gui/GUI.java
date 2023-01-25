@@ -2,6 +2,7 @@ package com.tictactoe.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
@@ -34,9 +35,8 @@ public class GUI extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
-                System.out.println("Game OVER");
-                exitGame();
-                System.exit(0);
+                if (exitGame())
+                    System.exit(0);
             }
         });
 
@@ -61,7 +61,7 @@ public class GUI extends JFrame {
         this.enable_X(true);
         this.button_X.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_X);
-
+        
         left_box.add(Box.createRigidArea(new Dimension(10, 10)));
 
         this.button_O = new JButton("JOUER \"O\"");
@@ -87,24 +87,39 @@ public class GUI extends JFrame {
     void DisplayErrorDialog(String Title, String body, int errorCode) {
         DialogBox dial = new DialogBox(this);
         dial.setDialogBox("Erreur", body, errorCode);
-        dial.displayMessageDialogBox(dial.ERROR_MESSAGE);
-
+        dial.displayMessageDialogBox(JOptionPane.ERROR_MESSAGE);
     }
 
     void displayMessageDialogBox(String Title, String body) {
         DialogBox dial = new DialogBox(this);
+        
         dial.setDialogBox(Title, body, 0);
-        dial.displayMessageDialogBox(dial.INFORMATION_MESSAGE);
+        dial.displayMessageDialogBox(JOptionPane.INFORMATION_MESSAGE);
     }
 
-    void exitGame() {
-        DisplayErrorDialog("TictacToe", "Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?", 200);
+    int displayConfirmDialogBox(String Title, String body, int option) {
+        DialogBox dial = new DialogBox(this);
+        
+        dial.setDialogBox(Title, body, 0);
+        return dial.displayConfirmDialogBox(option);
+    }
 
-        if (Client.disconnect()) {
-            this.displayMessageDialogBox("Information", "Vous avez bien été déconnecté");
-        } else {
-            this.displayMessageDialogBox("Information", "Vous n'avez pas pu être correctement déconnecté");
+    boolean exitGame()
+    {
+        int reponse = displayConfirmDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",JOptionPane.YES_NO_OPTION);
+        
+        if (reponse == 0)
+        {
+            if (Client.disconnect())
+                {
+                    this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
+                } else
+                {
+                    this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+                }
         }
+
+        return reponse == 0;
     }
 
     public void deactivateAll() {

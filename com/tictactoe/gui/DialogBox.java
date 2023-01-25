@@ -56,23 +56,17 @@ public class DialogBox extends JOptionPane {
     }
 
     public void displayMessageDialogBox(int messageType) {
-        JOptionPane dialog = new JOptionPane();
-
         if (this.code != 0)
             this.body += "\nError code : " + this.code;
 
-        dialog.showMessageDialog(this.parentFrame, this.body, this.title, messageType);
-
+        JOptionPane.showMessageDialog(this.parentFrame, this.body, this.title, messageType);
     }
 
     public int displayConfirmDialogBox(int optionType) {
-        JOptionPane dialog = new JOptionPane();
-
         if (this.code != 0)
             this.body += "\nError code : " + this.code;
 
-        return dialog.showConfirmDialog(this.parentFrame, this.body, this.title, optionType);
-
+        return JOptionPane.showConfirmDialog(this.parentFrame, this.body, this.title, optionType);
     }
 
     public static void main(final String[] args) {
@@ -81,6 +75,20 @@ public class DialogBox extends JOptionPane {
         DialogBox dial = new DialogBox(parent);
 
         dial.setDialogBox("Hello World !", "lorem ipsum", 0);
-        dial.displayMessageDialogBox(QUESTION_MESSAGE);
+        System.out.print("Vous avez répondu ");
+        switch (dial.displayConfirmDialogBox(YES_NO_CANCEL_OPTION)) {
+            case 0:
+            System.out.println("oui");
+            break;
+
+            case 1:
+            System.out.println("non");
+            break;
+
+            case 2:
+            System.out.println("cancel");
+            break;
+        }
+        //System.out.println(dial.displayConfirmDialogBox(YES_NO_CANCEL_OPTION));
     }
 }

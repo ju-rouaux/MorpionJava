@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.plaf.*;
 
 import com.tictactoe.game.TTT_Data;
 import com.tictactoe.game.TTT_Interface;
