@@ -2,6 +2,7 @@ package com.tictactoe.gui;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,11 @@ public class GUI extends JFrame {
     private GridPannel grid;
     private JButton button_X;
     private JButton button_O;
+
+    private JButton state_button;
+    private boolean state;
+    private JButton O_Play_State_Button;
+    private JButton X_Play_State_Button;
 
     public GUI() {
         super("TicTacToe");
@@ -66,12 +72,33 @@ public class GUI extends JFrame {
         this.button_X.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_X);
 
+
+        this.X_Play_State_Button = new JButton("X player state");
+        this.X_Play_State_Button.setAlignmentX(CENTER_ALIGNMENT);
+        this.X_Play_State_Button.addActionListener((ActionEvent e) ->  this.enable_X(this.state) );
+
+        left_box.add(this.X_Play_State_Button);
+        
         left_box.add(Box.createRigidArea(new Dimension(10, 10)));
 
         this.button_O = new JButton("JOUER \"O\"");
         this.enable_O(true);
         this.button_O.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_O);
+
+
+
+        this.O_Play_State_Button = new JButton("O player state");
+        this.O_Play_State_Button.setAlignmentX(CENTER_ALIGNMENT);
+        this.O_Play_State_Button.addActionListener((ActionEvent e) ->  this.enable_O(this.state) );
+        left_box.add(this.O_Play_State_Button);
+
+        this.state_button = new JButton("False");
+        this.state_button.setAlignmentX(BOTTOM_ALIGNMENT);
+
+        this.state_button.addActionListener((ActionEvent e) ->  this.switchState() );
+        
+        left_box.add(this.state_button);
 
         //Ajout menu
         this.add(left_box);
@@ -82,6 +109,9 @@ public class GUI extends JFrame {
         this.grid = new GridPannel();
         this.grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
+
+
+
         //Ajout grille
         this.add(this.grid);
         
@@ -89,18 +119,47 @@ public class GUI extends JFrame {
         this.setVisible(true);
     }
 
+    void switchState() {
+        this.state = !this.state;
+
+        if (this.state)
+        this.state_button.setText("True");
+        else
+        this.state_button.setText("False");
+    }
+
     void DisplayErrorDialog(String Title, String body, int errorCode) {
 
         DialogBox dial = new DialogBox(this);
         
         dial.setDialogBox("Erreur", body, errorCode);
-        dial.displayMessageDialogBox(dial.ERROR_MESSAGE);
+        dial.displayMessageDialogBox(JOptionPane.ERROR_MESSAGE);
+    }
+
+    void displayMessageDialogBox(String Title, String body) {
+        DialogBox dial = new DialogBox(this);
+        
+        dial.setDialogBox(Title, body, 0);
+        dial.displayMessageDialogBox(JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    void displayConfirmDialogBox(String Title, String body) {
+        DialogBox dial = new DialogBox(this);
+        
+        dial.setDialogBox(Title, body, 0);
+        dial.displayConfirmDialogBox(JOptionPane.YES_NO_CANCEL_OPTION);
     }
 
     void exitGame()
     {
         DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
-        //System.out.println(Client.ClientDisconect());
+        if (Client.disconnect())
+        {
+            this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
+        } else
+        {
+            this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+        }
     }
 
     public void deactivateAll() {
@@ -132,7 +191,7 @@ public class GUI extends JFrame {
         
         if(b == true) {
             this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
-            this.button_X.setText("Jouer \"X\"");
+            this.button_X.setText("Jouer \"Xa\"");
         }
         else {
             this.button_X.removeActionListener(null);

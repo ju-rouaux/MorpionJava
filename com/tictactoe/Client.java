@@ -4,6 +4,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import javax.swing.plaf.*;
 
 import com.tictactoe.game.TTT_Data;
 import com.tictactoe.game.TTT_Interface;
@@ -62,13 +63,15 @@ public class Client {
         return false;
     }
 
-    public static void disconnect() {
+    public static boolean disconnect() {
         try {
             game.disconnect(client_id);
+            return true;
         }
         catch (RemoteException e) {
             System.out.println(e);
         }
+        return false;
     }
 
     public static void updateData() throws RemoteException {
@@ -104,14 +107,16 @@ public class Client {
                 
                 switch(game_data.state) {
                     case WAITING:
-                        if(game_data.X_connected)
-                            gui.enable_X(false);
-                        else
-                            gui.enable_X(true);
-                        if(game_data.O_connected)
-                            gui.enable_O(false);
-                        else
-                            gui.enable_O(true);
+                        gui.enable_X(!game_data.X_connected);
+                        gui.enable_O(!game_data.O_connected);
+                        // if(game_data.X_connected)
+                        //     gui.enable_X(false);
+                        // else
+                        //     gui.enable_X(true);
+                        // if(game_data.O_connected)
+                        //     gui.enable_O(false);
+                        // else
+                        //     gui.enable_O(true);
                         break;
 
                     case PLAYING:
