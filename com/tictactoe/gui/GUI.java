@@ -42,9 +42,8 @@ public class GUI extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
-                System.out.println("Game OVER");
-                exitGame();
-                System.exit(0);
+                if (exitGame())
+                    System.exit(0);
             }
         });
 
@@ -143,23 +142,29 @@ public class GUI extends JFrame {
         dial.displayMessageDialogBox(JOptionPane.INFORMATION_MESSAGE);
     }
 
-    void displayConfirmDialogBox(String Title, String body) {
+    int displayConfirmDialogBox(String Title, String body, int option) {
         DialogBox dial = new DialogBox(this);
         
         dial.setDialogBox(Title, body, 0);
-        dial.displayConfirmDialogBox(JOptionPane.YES_NO_CANCEL_OPTION);
+        return dial.displayConfirmDialogBox(option);
     }
 
-    void exitGame()
+    boolean exitGame()
     {
-        DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
-        if (Client.disconnect())
+        int reponse = displayConfirmDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",JOptionPane.YES_NO_OPTION);
+        
+        if (reponse == 0)
         {
-            this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
-        } else
-        {
-            this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+            if (Client.disconnect())
+                {
+                    this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
+                } else
+                {
+                    this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+                }
         }
+
+        return reponse == 0;
     }
 
     public void deactivateAll() {
