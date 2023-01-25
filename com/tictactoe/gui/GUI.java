@@ -28,11 +28,6 @@ public class GUI extends JFrame {
     private JButton button_X;
     private JButton button_O;
 
-    private JButton state_button;
-    private boolean state;
-    private JButton O_Play_State_Button;
-    private JButton X_Play_State_Button;
-
     public GUI() {
         super("TicTacToe");
 
@@ -70,13 +65,6 @@ public class GUI extends JFrame {
         this.enable_X(true);
         this.button_X.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_X);
-
-
-        this.X_Play_State_Button = new JButton("X player state");
-        this.X_Play_State_Button.setAlignmentX(CENTER_ALIGNMENT);
-        this.X_Play_State_Button.addActionListener((ActionEvent e) ->  this.enable_X(this.state) );
-
-        left_box.add(this.X_Play_State_Button);
         
         left_box.add(Box.createRigidArea(new Dimension(10, 10)));
 
@@ -84,20 +72,6 @@ public class GUI extends JFrame {
         this.enable_O(true);
         this.button_O.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_O);
-
-
-
-        this.O_Play_State_Button = new JButton("O player state");
-        this.O_Play_State_Button.setAlignmentX(CENTER_ALIGNMENT);
-        this.O_Play_State_Button.addActionListener((ActionEvent e) ->  this.enable_O(this.state) );
-        left_box.add(this.O_Play_State_Button);
-
-        this.state_button = new JButton("False");
-        this.state_button.setAlignmentX(BOTTOM_ALIGNMENT);
-
-        this.state_button.addActionListener((ActionEvent e) ->  this.switchState() );
-        
-        left_box.add(this.state_button);
 
         //Ajout menu
         this.add(left_box);
@@ -116,15 +90,6 @@ public class GUI extends JFrame {
         
         this.pack();
         this.setVisible(true);
-    }
-
-    void switchState() {
-        this.state = !this.state;
-
-        if (this.state)
-        this.state_button.setText("True");
-        else
-        this.state_button.setText("False");
     }
 
     void DisplayErrorDialog(String Title, String body, int errorCode) {
@@ -196,7 +161,7 @@ public class GUI extends JFrame {
         
         if(b == true) {
             this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
-            this.button_X.setText("Jouer \"Xa\"");
+            this.button_X.setText("Jouer \"X\"");
         }
         else {
             this.button_X.removeActionListener(null);
