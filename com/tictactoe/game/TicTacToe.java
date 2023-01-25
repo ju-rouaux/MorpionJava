@@ -3,6 +3,8 @@ package com.tictactoe.game;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import com.tictactoe.game.TTT_Data.State;
+
 public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
    
     private TTT_Data data;
@@ -42,7 +44,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
             if(winningCombo[0] == -1) //Egalité
                 this.data.setDraw();
             else
-                this.data.setWinner(this.data.grid[winningCombo[0]], winningCombo);
+                this.data.setWinner(this.data.grid[winningCombo[0]] == X_player_id ? 'X' : 'O', winningCombo);
         }
 
         return true;
@@ -67,8 +69,9 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
         if(this.X_player_id < 0) {
             this.X_player_id = (int) (Math.random() * 1000) % 500;
 
-            if(this.O_player_id >= 0) //Lancer partie si O connecté.
-                this.data.setStart();
+            this.playerConnected();
+            
+            this.data.X_connected = true;
 
             return this.X_player_id;
         }
@@ -86,12 +89,25 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
         if(this.O_player_id < 0) {
             this.O_player_id = 500 + (int) (Math.random() * 1000) % 500;
 
-            if(this.X_player_id >= 0) //Lancer partie si X connecté.
-                this.data.setStart();
+            this.playerConnected();
+
+            this.data.O_connected = true;
 
             return this.O_player_id;
         }
         return -1;
+    }
+
+    /** 
+     * Vérifie si la partie doit être lancée
+     */
+    private void playerConnected() {
+        if(this.data.state != State.PLAYING) {
+            this.data.setWait();
+        }
+
+        if(this.X_player_id >= 0 && this.O_player_id >= 0) //Lancer partie si 2 joueurs connectés
+            this.data.setStart();
     }
 
     /**
@@ -102,17 +118,19 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
     public void disconnect(int player_id) throws RemoteException {
         if(this.X_player_id == player_id) {
             this.data.X_connected = false;
-            this.X_player_id = -1;
+            this.X_player_id = -5;
         }
         else if(this.O_player_id == player_id) {
             this.data.O_connected = false;
-            this.O_player_id = -1;
+            this.O_player_id = -5;
         }
         else //Ignorer la suite si le joueur déconnecté n'est pas dans la partie
             return;
 
-        if(this.data.state == TTT_Data.State.PLAYING)
-            this.data = new TTT_Data(); //Reset la partie
+            
+        this.data.setWait();
+        this.disconnect(X_player_id);
+        this.disconnect(O_player_id);
     }
 
 
@@ -152,8 +170,8 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
 
 
     public TicTacToe() throws RemoteException {
-        this.X_player_id = -1;
-        this.O_player_id = -1;
+        this.X_player_id = -5;
+        this.O_player_id = -5;
 
         this.data = new TTT_Data();        
     }

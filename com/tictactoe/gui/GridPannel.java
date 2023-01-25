@@ -53,7 +53,6 @@ class GridPannel extends JPanel {
     public void resetGrid() {
         for(GridButton b : buttons) {
             b.setEnabled(false);
-            b.setText("");
             b.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         }
     }

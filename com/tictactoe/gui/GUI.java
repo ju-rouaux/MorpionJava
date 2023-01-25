@@ -15,8 +15,6 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
-
 public class GUI extends JFrame {
 
     public static final int WIDTH = 600;
@@ -42,12 +40,10 @@ public class GUI extends JFrame {
             }
         });
 
-
-        //Menu
+        // Menu
         Box left_box = new Box(BoxLayout.Y_AXIS);
         left_box.setAlignmentY(CENTER_ALIGNMENT);
-        left_box.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));
-
+        left_box.setPreferredSize(new Dimension(WIDTH / 3, HEIGHT));
 
         JLabel title = new JLabel("<html><h1>TicTacToe</h1></html>", JLabel.CENTER);
         title.setAlignmentX(CENTER_ALIGNMENT);
@@ -58,7 +54,7 @@ public class GUI extends JFrame {
         message_label = new JLabel("<html><p>En attente des joueurs...</p></html>", JLabel.CENTER);
         message_label.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(message_label);
-        
+
         left_box.add(Box.createRigidArea(new Dimension(0, 120)));
 
         this.button_X = new JButton("JOUER \"X\"");
@@ -73,34 +69,42 @@ public class GUI extends JFrame {
         this.button_O.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_O);
 
-        //Ajout menu
+        // Ajout menu
         this.add(left_box);
-        
 
-        //Grille
+        // Grille
         System.out.println("AAA");
         this.grid = new GridPannel();
         this.grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        //Ajout grille
+
+        // Ajout grille
         this.add(this.grid);
-        
+
         this.pack();
         this.setVisible(true);
     }
 
     void DisplayErrorDialog(String Title, String body, int errorCode) {
-
         DialogBox dial = new DialogBox(this);
-        
         dial.setDialogBox("Erreur", body, errorCode);
         dial.displayMessageDialogBox(dial.ERROR_MESSAGE);
+
     }
 
-    void exitGame()
-    {
-        DisplayErrorDialog("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",200);
-        //System.out.println(Client.ClientDisconect());
+    void displayMessageDialogBox(String Title, String body) {
+        DialogBox dial = new DialogBox(this);
+        dial.setDialogBox(Title, body, 0);
+        dial.displayMessageDialogBox(dial.INFORMATION_MESSAGE);
+    }
+
+    void exitGame() {
+        DisplayErrorDialog("TictacToe", "Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?", 200);
+
+        if (Client.disconnect()) {
+            this.displayMessageDialogBox("Information", "Vous avez bien été déconnecté");
+        } else {
+            this.displayMessageDialogBox("Information", "Vous n'avez pas pu être correctement déconnecté");
+        }
     }
 
     public void deactivateAll() {
@@ -114,11 +118,11 @@ public class GUI extends JFrame {
     public void highlight(int[] cells) {
         this.grid.highlight(cells);
     }
-    
+
     public void updateGridText(char[] cells) {
         this.grid.updateGridText(cells);
     }
-    
+
     public void setMessage(String message) {
         this.message_label.setText(message);
     }
@@ -129,12 +133,11 @@ public class GUI extends JFrame {
 
     public void enable_X(boolean b) {
         this.button_X.setEnabled(b);
-        
-        if(b == true) {
+
+        if (b == true) {
             this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
             this.button_X.setText("Jouer \"X\"");
-        }
-        else {
+        } else {
             this.button_X.removeActionListener(null);
             this.button_X.setText("\"X\" est connecté");
         }
@@ -142,12 +145,11 @@ public class GUI extends JFrame {
 
     public void enable_O(boolean b) {
         this.button_O.setEnabled(b);
-        
-        if(b == true) {
+
+        if (b == true) {
             this.button_O.addActionListener((ActionEvent e) -> Client.connectAsO());
             this.button_O.setText("Jouer \"O\"");
-        }
-        else {
+        } else {
             this.button_O.removeActionListener(null);
             this.button_O.setText("\"O\" est connecté");
         }

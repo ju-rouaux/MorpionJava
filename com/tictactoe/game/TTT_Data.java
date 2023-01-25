@@ -87,14 +87,18 @@ public class TTT_Data implements Serializable {
         this.message = "Au joueur " + this.whoseTurn + " de jouer.";
     }
 
+    void setWait() {
+        this.state = State.WAITING;
+        this.message = "En attente des joueurs...";
+        this.winningCombo = null;
+    }
+
     TTT_Data() {
         X_connected = false;
         O_connected = false;
         this.whoseTurn = 'X';
-        this.state = State.WAITING;
         this.grid = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-        this.message = "En attente des joueurs...";
-        this.winningCombo = null;
+        this.setWait();
     }
 }
 

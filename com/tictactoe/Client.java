@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import com.tictactoe.game.TTT_Data;
 import com.tictactoe.game.TTT_Interface;
+import com.tictactoe.game.TTT_Data.State;
 import com.tictactoe.gui.GUI;
 
 public class Client {
@@ -19,6 +20,9 @@ public class Client {
     private static int client_id = -1;
 
     private static GUI gui;
+
+    private static boolean disconnected = true;
+    private static boolean game_has_just_started = false;
 
     public static boolean gridButtonClicked(int index) {
         try {
@@ -62,17 +66,25 @@ public class Client {
         return false;
     }
 
-    public static void disconnect() {
+    public static boolean disconnect() {
         try {
             game.disconnect(client_id);
         }
         catch (RemoteException e) {
             System.out.println(e);
+            return false;
         }
+        return true;
     }
 
-    public static void updateData() throws RemoteException {
-        game_data = game.fetchData();
+    public static void updateData() {
+        try {
+            game_data = game.fetchData();
+        } catch (Exception e) {
+            System.out.println("Erreur de connection au serveur :");
+            System.out.println(e);
+            System.exit(-1);
+        }
     }
 
     // private static void CallErrorDialog(String body, int errorCode) {
@@ -98,55 +110,54 @@ public class Client {
             }
             catch (Exception e) {}
 
-            try {
-                updateData();
-                gui.setMessage(game_data.message);
-                
-                switch(game_data.state) {
-                    case WAITING:
-                        if(game_data.X_connected)
-                            gui.enable_X(false);
-                        else
-                            gui.enable_X(true);
-                        if(game_data.O_connected)
-                            gui.enable_O(false);
-                        else
-                            gui.enable_O(true);
-                        break;
-
-                    case PLAYING:
-                        gui.updateGridText(game_data.grid);
-                        ArrayList<Integer> activated = new ArrayList<>();
-
-                        //Vérifier si le joueur n'est pas autorisé à jouer
-                        if( client_id == -1 ||
-                          !((game_data.whoseTurn == 'O' && client_id >= 500) ||  // !(tour de O et joueur O)
-                          (game_data.whoseTurn == 'X' && client_id < 500))) {    // !(tour de X et joueur X)
-                            gui.deactivateAll();
-                            break;
-                        }
-
-                        for(int i = 0; i < 9; i++)
-                            if(game_data.grid[i] == ' ')
-                                activated.add(i);
-
-                        if(activated.size() > 0)
-                            gui.activateCells(activated.toArray(new Integer[0]));
-
-                        break;
-                    case VICTORY:
-                        gui.highlight(game_data.winningCombo);
-                        break;
-
-                    case DRAW:
-
+            updateData();
+            gui.setMessage(game_data.message);
+            gui.updateGridText(game_data.grid);
+            
+            if(game_data.state == State.PLAYING) {
+                if(game_has_just_started) {
+                    gui.resetGrid();
+                    game_has_just_started = false;
                 }
 
-            } catch (Exception e) {
-                System.out.println("Erreur de connection au serveur :");
-                System.out.println(e);
-                System.exit(-1);
+                ArrayList<Integer> activated = new ArrayList<>();
+
+                //Vérifier si le joueur n'est pas autorisé à jouer
+                if( client_id == -1 ||
+                    !((game_data.whoseTurn == 'O' && client_id >= 500) ||  // !(tour de O et joueur O)
+                    (game_data.whoseTurn == 'X' && client_id < 500))) {    // !(tour de X et joueur X)
+                    gui.deactivateAll();
+                    continue;
+                }
+
+                disconnected = false;
+
+                for(int i = 0; i < 9; i++)
+                    if(game_data.grid[i] == ' ')
+                        activated.add(i);
+
+                if(activated.size() > 0)
+                    gui.activateCells(activated.toArray(new Integer[0]));
             }
+            else {
+                game_has_just_started = true;
+
+                if(game_data.state == State.VICTORY)
+                    gui.highlight(game_data.winningCombo);
+
+                if(disconnected == false) {
+                    client_id = -1;
+                    disconnected = true;
+                }
+            }
+            if(game_data.X_connected)
+                gui.enable_X(false);
+            else
+                gui.enable_X(true);
+            if(game_data.O_connected)
+                gui.enable_O(false);
+            else
+                gui.enable_O(true);
         }
     }
 }
