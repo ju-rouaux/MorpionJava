@@ -108,15 +108,13 @@ public class GUI extends JFrame {
     {
         int reponse = displayConfirmDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",JOptionPane.YES_NO_OPTION);
         
-        if (reponse == 0)
-        {
-            if (Client.disconnect())
-                {
-                    this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
-                } else
-                {
-                    this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
-                }
+        if (reponse == 0) {
+            if (Client.disconnect()) {
+                this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
+            } 
+            else {
+                this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+            }
         }
 
         return reponse == 0;
