@@ -3,6 +3,9 @@ package com.tictactoe.gui;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+/**
+ * TODO : commentaires et retirer les warning
+ */
 public class DialogBox extends JOptionPane {
     private JFrame parentFrame;
     private int code;

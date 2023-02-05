@@ -2,6 +2,10 @@ package com.tictactoe.game;
 
 import java.io.Serializable;
 
+/**
+ * Données transmises au client par le serveur, sur l'état d'une partie.
+ * Le serveur dispose de quelques méthodes pour manipuler les données plus facilement.
+ */
 public class TTT_Data implements Serializable {
 
     /**
@@ -68,18 +72,29 @@ public class TTT_Data implements Serializable {
             this.whoseTurn = 'X';
     }
 
+    /**
+     * Finalise la partie lorsqu'il y a un gagnant.
+     * @param winner Le symbole du joueur gagnant.
+     * @param winningCombo Les index des cases formant la combinaison gagnante.
+     */
     void setWinner(char winner, int[] winningCombo) {
         this.state = State.VICTORY;
         this.message = winner + " a gagné !";
         this.winningCombo = winningCombo;
     }
 
+    /**
+     * Finalise la partie lorsqu'il y a égalité.
+     */
     void setDraw() {
         this.state = State.DRAW;
         this.message = "Égalité.";
         this.winningCombo = null;
     }
 
+    /**
+     * Commencer la partie.
+     */
     void setStart() {
         System.out.println("Commencer.");
         this.state = State.PLAYING;
@@ -87,12 +102,19 @@ public class TTT_Data implements Serializable {
         this.message = "Au joueur " + this.whoseTurn + " de jouer.";
     }
 
+    /**
+     * Mettre la partie en attente de joueurs.
+     */
     void setWait() {
         this.state = State.WAITING;
         this.message = "En attente des joueurs...";
         this.winningCombo = null;
     }
 
+    /**
+     * Instancie les données et appelle setWait().
+     * @see TTT_Data#setWait()
+     */
     TTT_Data() {
         X_connected = false;
         O_connected = false;

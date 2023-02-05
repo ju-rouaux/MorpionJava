@@ -5,6 +5,12 @@ import java.rmi.server.UnicastRemoteObject;
 
 import com.tictactoe.game.TTT_Data.State;
 
+/**
+ * Jeu du TicTacToe.
+ * Ce jeu actualise son état à chaque mouvement réalisé par un joueur.
+ * Autrement dit, il ne boucle pas.
+ * @author Julien Rouaux
+ */
 public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
    
     private TTT_Data data;
@@ -12,24 +18,22 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
     private int X_player_id;
     private int O_player_id;
 
-    /**
-     * Permet au joueur de l'identifiant donné de joueur son tour, et actualise l'état général du jeu.
-     * Le coup est ignoré s'il n'est pas autorisé.
-     */
-    public boolean playTurn(int player_id, int cell_index) throws RemoteException {
-        System.out.println(player_id + " a joué en " + cell_index);
 
+    public boolean playTurn(int player_id, int cell_index) throws RemoteException {
+        
         //Vérifier si l'index est correct
         if(cell_index < 0 || cell_index >= 9 || this.data.grid[cell_index] != ' ')
-            return false;
-
+        return false;
+        
         //Vérifier si le joueur est autorisé à jouer et jouer le tour
         if((this.X_player_id == player_id) && (this.data.whoseTurn == 'X'))
-                this.data.grid[cell_index] = 'X';
+        this.data.grid[cell_index] = 'X';
         else if((this.O_player_id == player_id) && (this.data.whoseTurn == 'O'))
-                this.data.grid[cell_index] = 'O';
+        this.data.grid[cell_index] = 'O';
         else
-            return false; //Non autorisé
+        return false; //Non 
+        
+        System.out.println(player_id + " a joué en " + cell_index);
 
         //Calculer si victoire
         int[] winningCombo = this.winningCombo();
@@ -52,6 +56,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
 
     /**
      * Retourne les données de la partie.
+     * @throws RemoteException
      */
     public TTT_Data fetchData() throws RemoteException {
         return this.data;
@@ -99,7 +104,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
     }
 
     /** 
-     * Vérifie si la partie doit être lancée
+     * Vérifie si la partie doit être lancée lorsqu'un joueur se connecte.
      */
     private void playerConnected() {
         if(this.data.state != State.PLAYING) {
@@ -114,23 +119,20 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
      * Déconnecte le joueur de la partie.
      * Si la partie est en cours, elle est arrêtée.
      * Si le joueur était en attente d'un autre joueur, il libère sa place.
+     * @throws RemoteException
      */
     public void disconnect(int player_id) throws RemoteException {
-        if(this.X_player_id == player_id) {
-            this.data.X_connected = false;
-            this.X_player_id = -5;
-        }
-        else if(this.O_player_id == player_id) {
-            this.data.O_connected = false;
-            this.O_player_id = -5;
-        }
-        else //Ignorer la suite si le joueur déconnecté n'est pas dans la partie
-            return;
+        System.out.println("Déconnexion de " + player_id);
 
-            
-        this.data.setWait();
-        this.disconnect(X_player_id);
-        this.disconnect(O_player_id);
+        if(this.X_player_id == player_id || this.O_player_id == player_id) {
+            this.data.X_connected = false;
+            this.data.O_connected = false;
+            this.X_player_id = -5;
+            this.O_player_id = -5;
+            this.data.setWait();
+        }
+        
+        return;            
     }
 
 
@@ -140,6 +142,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
      * Exemple : {0,1,2} pour la première ligne de la grille.
      * @return le combo gagnant de la partie, l'array {-1} en cas d'égalité,
      * sinon null si la partie n'est pas terminée.
+     * @throws RemoteException
      */
     private int[] winningCombo() throws RemoteException {
    
@@ -168,7 +171,10 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
         return new int[] {-1};
     }
 
-
+    /**
+     * Créé un TicTacToe, instancie une structure TTT_Data().
+     * @throws RemoteException
+     */
     public TicTacToe() throws RemoteException {
         this.X_player_id = -5;
         this.O_player_id = -5;

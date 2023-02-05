@@ -16,6 +16,10 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * Interface graphique du jeu.
+ * @author Julien Rouaux - Elias Okat
+ */
 public class GUI extends JFrame {
 
     public static final int WIDTH = 600;
@@ -26,17 +30,23 @@ public class GUI extends JFrame {
     private JButton button_X;
     private JButton button_O;
 
+    /**
+     * Instanciation de la fenêtre de jeu.
+     */
     public GUI() {
         super("TicTacToe");
 
         this.setResizable(false);
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.LINE_AXIS));
 
+
+        // Fenêtre de dialogue à la fermeture du programme.
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent ev) {
-                if (exitGame())
+                if (exitGame()) {
                     System.exit(0);
+                }
             }
         });
 
@@ -73,7 +83,6 @@ public class GUI extends JFrame {
         this.add(left_box);
 
         // Grille
-        System.out.println("AAA");
         this.grid = new GridPannel();
         this.grid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -84,12 +93,23 @@ public class GUI extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * TODO
+     * @param Title
+     * @param body
+     * @param errorCode
+     */
     void DisplayErrorDialog(String Title, String body, int errorCode) {
         DialogBox dial = new DialogBox(this);
         dial.setDialogBox("Erreur", body, errorCode);
         dial.displayMessageDialogBox(JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * TODO
+     * @param Title
+     * @param body
+     */
     void displayMessageDialogBox(String Title, String body) {
         DialogBox dial = new DialogBox(this);
         
@@ -97,6 +117,13 @@ public class GUI extends JFrame {
         dial.displayMessageDialogBox(JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * TODO
+     * @param Title
+     * @param body
+     * @param option
+     * @return
+     */
     int displayConfirmDialogBox(String Title, String body, int option) {
         DialogBox dial = new DialogBox(this);
         
@@ -104,6 +131,10 @@ public class GUI extends JFrame {
         return dial.displayConfirmDialogBox(option);
     }
 
+    /**
+     * TODO
+     * @return
+     */
     boolean exitGame()
     {
         int reponse = displayConfirmDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",JOptionPane.YES_NO_OPTION);
@@ -120,35 +151,64 @@ public class GUI extends JFrame {
         return reponse == 0;
     }
 
+    /**
+     * Désactive toutes les cellules de la grille.
+     * Le joueur ne peut plus cliquer sur ces dernières.
+     */
     public void deactivateAll() {
         this.grid.deactivateAll();
     }
 
+    /**
+     * Active les cellules de la grille dont les index sont donnés en paramètre.
+     * @param cells Les index des cellules à activer.
+     */
     public void activateCells(Integer[] cells) {
         this.grid.activateCells(cells);
     }
 
+    /**
+     * Met en surbrillance (encadré rouge) les cellules dont les index sont donnés en paramètre.
+     * @param cells Les index des cellules à mettre en surbrillance.
+     */
     public void highlight(int[] cells) {
         this.grid.highlight(cells);
     }
 
+    /**
+     * Change le texte contenu dans les cellules par le caractère donné au même index que l'index de la cellule.
+     * @param cells Les caractères que doivent contenir chaque cellule.
+     */
     public void updateGridText(char[] cells) {
         this.grid.updateGridText(cells);
     }
 
+    /**
+     * Change le message affiché à gauche de l'interface.
+     * @param message Le nouveau message.
+     */
     public void setMessage(String message) {
         this.message_label.setText(message);
     }
 
+    /**
+     * Enlève toutes les modifications faites sur les cellules, et les désactive.
+     */
     public void resetGrid() {
         this.grid.resetGrid();
     }
 
+    /**
+     * Active ou désactive le bouton de connexion en tant que joueur X.
+     * @param b Vrai pour activer le bouton, faux pour le désactiver.
+     */
     public void enable_X(boolean b) {
         this.button_X.setEnabled(b);
 
         if (b == true) {
-            this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
+            //Prévenir l'ajout de multiple actionListener inutilement.
+            if(this.button_X.getActionListeners().length == 0)
+                this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
             this.button_X.setText("Jouer \"X\"");
         } else {
             this.button_X.removeActionListener(null);
@@ -156,16 +216,21 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Active ou désactive le bouton de connexion en tant que joueur O.
+     * @param b Vrai pour activer le bouton, faux pour le désactiver.
+     */
     public void enable_O(boolean b) {
         this.button_O.setEnabled(b);
 
         if (b == true) {
-            this.button_O.addActionListener((ActionEvent e) -> Client.connectAsO());
+            //Prévenir l'ajout de multiple actionListener inutilement.
+            if(this.button_O.getActionListeners().length == 0)
+                this.button_O.addActionListener((ActionEvent e) -> Client.connectAsO());
             this.button_O.setText("Jouer \"O\"");
         } else {
             this.button_O.removeActionListener(null);
             this.button_O.setText("\"O\" est connecté");
         }
     }
-
 }

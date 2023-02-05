@@ -3,18 +3,23 @@ package com.tictactoe;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collection;
-import javax.swing.plaf.*;
 
 import com.tictactoe.game.TTT_Data;
 import com.tictactoe.game.TTT_Interface;
 import com.tictactoe.game.TTT_Data.State;
 import com.tictactoe.gui.GUI;
 
+/**
+ * Application principale.
+ * Lance l'interface et réalise les appels au serveur.
+ * @author Julien Rouaux
+ */
 public class Client {
 
-    private Client() {
-    }
+    /**
+     * Ne pas autoriser l'instanciation d'un client.
+     */
+    private Client() {}
 
     private static TTT_Interface game;
     private static TTT_Data game_data;
@@ -22,77 +27,97 @@ public class Client {
 
     private static GUI gui;
 
-    private static boolean disconnected = true;
-    private static boolean game_has_just_started = false;
-
+    /**
+     * Indique au serveur qu'un bouton de la grille est cliqué.
+     * @param index Index du bouton cliqué dans la grille.
+     * @return Vrai si le clic a été autorisé et enregistré par le serveur, sinon faux.
+     */
     public static boolean gridButtonClicked(int index) {
         try {
             return game.playTurn(client_id, index);
         } catch (RemoteException e) {
             System.out.println(e);
         }
-
         return false;
     }
 
+    /**
+     * Indique au serveur la volonté de jouer le joueur X.
+     * Si le joueur peut se connecter, son identifiant est actualisé par celui donné par le serveur.
+     * @return Vrai si le joueur s'est connecté en tant que joueur X.
+     */
     public static boolean connectAsX() {
-        if(client_id != -1) //Déjà connecté
+        if(client_id != -1) {
+            System.out.println("Un identifiant est déjà attribué au joueur.");
             return false;
+        }
 
         try {
             client_id = game.connectAsX();
-            if(client_id != -1)
+            if(client_id != -1) {
+                System.out.println("Identifiant attribué par le serveur : " + client_id);
                 return true;
+            }
         } catch (RemoteException e) {
             System.out.println(e);
         }
 
-        System.out.println("Un joueur joue déjà X");
+        System.out.println("Un joueur joue déjà X.");
         return false;
     }
 
+    /**
+     * Indique au serveur la volonté de jouer le joueur O.
+     * Si le joueur peut se connecter, son identifiant est actualisé par celui donné par le serveur.
+     * @return Vrai si le joueur s'est connecté en tant que joueur O.
+     */
     public static boolean connectAsO() {
-        if(client_id != -1) //Déjà connecté
+        if(client_id != -1) {
+            System.out.println("Un identifiant est déjà attribué au joueur.");
             return false;
+        }
 
         try {
             client_id = game.connectAsO();
-            if(client_id != -1)
+            if(client_id != -1) {
+                System.out.println("Identifiant attribué par le serveur : " + client_id);
                 return true;
+            }
         } catch (RemoteException e) {
             System.out.println(e);
         }
 
-        System.out.println("Un joueur joue déjà O");
+        System.out.println("Un joueur joue déjà O.");
         return false;
     }
 
+    /**
+     * Appelé lorsque le joueur doit être déconnecté du jeu.
+     * Le serveur réinitialise la partie si un joueur (en jeu) quitte.
+     * @return
+     */
     public static boolean disconnect() {
         try {
+            System.out.println("Demande de déconnexion...");
             game.disconnect(client_id);
         }
         catch (RemoteException e) {
             System.out.println(e);
             return false;
         }
+
+        System.out.println("Déconnexion réussie.");
         return true;
     }
 
-    public static void updateData() {
-        try {
-            game_data = game.fetchData();
-        } catch (Exception e) {
-            System.out.println("Erreur de connection au serveur :");
-            System.out.println(e);
-            System.exit(-1);
-        }
-    }
-
-    // private static void CallErrorDialog(String body, int errorCode) {
-    //     gui.DisplayErrorDialog("TictacToe Erreur",body,errorCode);
-    // }
-
+    /**
+     * Main
+     * @param args -
+     */
     public static void main(String[] args) {
+        boolean disconnected = true;
+        boolean game_has_just_started = false;
+
         gui = new GUI();
 
         try {
@@ -103,7 +128,7 @@ public class Client {
             System.exit(-1);
         }
 
-        System.out.println("Identifiant  : "+client_id);
+        
         
         while (true) {
             try {
@@ -111,7 +136,14 @@ public class Client {
             }
             catch (Exception e) {}
 
-            updateData();
+            //Récupérer les données du serveur, on quitte le programme s'il n'est pas en ligne.
+            try {
+                game_data = game.fetchData();
+            } catch (Exception e) {
+                System.out.println(e);
+                System.exit(-1);
+            }
+
             gui.setMessage(game_data.message);
             gui.updateGridText(game_data.grid);
             
