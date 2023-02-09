@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 /**
  * Données transmises au client par le serveur, sur l'état d'une partie.
- * Le serveur dispose de quelques méthodes pour manipuler les données plus facilement.
+ * Le serveur dispose de quelques méthodes pour manipuler les données plus
+ * facilement.
+ * 
+ * @author Julien Rouaux
  */
 public class TTT_Data implements Serializable {
 
@@ -13,11 +16,11 @@ public class TTT_Data implements Serializable {
      */
     public enum State {
         /** La partie est en cours */
-        PLAYING, 
+        PLAYING,
         /** La partie résulte à une égalité */
-        DRAW, 
+        DRAW,
         /** Un joueur a gagné la partie */
-        VICTORY, 
+        VICTORY,
         /** En attente de connexion des joueurs */
         WAITING
     }
@@ -36,10 +39,11 @@ public class TTT_Data implements Serializable {
 
     /**
      * Etat de la partie.
+     * 
      * @see TTT_Data.State
      */
     public State state;
-    
+
     /**
      * Grille du jeu contenant "X" ou "O".
      * Si la case est vide, contient le caractère ' '.
@@ -54,10 +58,10 @@ public class TTT_Data implements Serializable {
 
     /**
      * Message affiché sur l'écran du client :
-     *  - En attente des joueurs...
-     *  - Au joueur X (ou O) de jouer.
-     *  - Égalité.
-     *  - Le joueur X (ou O) a gagné !
+     * - En attente des joueurs...
+     * - Au joueur X (ou O) de jouer.
+     * - Égalité.
+     * - Le joueur X (ou O) a gagné !
      */
     public String message;
 
@@ -66,16 +70,17 @@ public class TTT_Data implements Serializable {
      * Si aucun joueur n'est définit, X commence.
      */
     void nextPlayer() {
-        if(this.whoseTurn == 'X')
+        if (this.whoseTurn == 'X')
             this.whoseTurn = 'O';
         else
             this.whoseTurn = 'X';
-        this.message = "Au joueur " + this.whoseTurn + " de jouer.";    
+        this.message = "Au joueur " + this.whoseTurn + " de jouer.";
     }
 
     /**
      * Finalise la partie lorsqu'il y a un gagnant.
-     * @param winner Le symbole du joueur gagnant.
+     * 
+     * @param winner       Le symbole du joueur gagnant.
      * @param winningCombo Les index des cases formant la combinaison gagnante.
      */
     void setWinner(char winner, int[] winningCombo) {
@@ -99,7 +104,7 @@ public class TTT_Data implements Serializable {
     void setStart() {
         System.out.println("Commencer.");
         this.state = State.PLAYING;
-        this.grid = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        this.grid = new char[] { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
         this.message = "Au joueur " + this.whoseTurn + " de jouer.";
     }
 
@@ -114,16 +119,14 @@ public class TTT_Data implements Serializable {
 
     /**
      * Instancie les données et appelle setWait().
+     * 
      * @see TTT_Data#setWait()
      */
     TTT_Data() {
         X_connected = false;
         O_connected = false;
         this.whoseTurn = 'X';
-        this.grid = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        this.grid = new char[] { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
         this.setWait();
     }
 }
-
-
-
