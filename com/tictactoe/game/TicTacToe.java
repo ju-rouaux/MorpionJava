@@ -20,26 +20,26 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
 
 
     public boolean playTurn(int player_id, int cell_index) throws RemoteException {
+        //Vérifier si l'on est en cours de partie
+        if(this.data.state != TTT_Data.State.PLAYING)
+            return false;
         
         //Vérifier si l'index est correct
         if(cell_index < 0 || cell_index >= 9 || this.data.grid[cell_index] != ' ')
-        return false;
+            return false;
         
         //Vérifier si le joueur est autorisé à jouer et jouer le tour
         if((this.X_player_id == player_id) && (this.data.whoseTurn == 'X'))
-        this.data.grid[cell_index] = 'X';
+            this.data.grid[cell_index] = 'X';
         else if((this.O_player_id == player_id) && (this.data.whoseTurn == 'O'))
-        this.data.grid[cell_index] = 'O';
+            this.data.grid[cell_index] = 'O';
         else
-        return false; //Non 
+            return false; //Non 
         
         System.out.println(player_id + " a joué en " + cell_index);
 
         //Calculer si victoire
         int[] winningCombo = this.winningCombo();
-
-        //Passer au joueur suivant
-        this.data.nextPlayer();
 
         //Si fin de la partie
         if(winningCombo != null) {
@@ -48,8 +48,12 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
             if(winningCombo[0] == -1) //Egalité
                 this.data.setDraw();
             else
-                this.data.setWinner(this.data.grid[winningCombo[0]] == X_player_id ? 'X' : 'O', winningCombo);
+                this.data.setWinner(this.data.whoseTurn, winningCombo);
+            return true;
         }
+
+        //Passer au joueur suivant
+        this.data.nextPlayer();
 
         return true;
     }

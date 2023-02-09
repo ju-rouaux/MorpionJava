@@ -70,6 +70,7 @@ public class TTT_Data implements Serializable {
             this.whoseTurn = 'O';
         else
             this.whoseTurn = 'X';
+        this.message = "Au joueur " + this.whoseTurn + " de jouer.";    
     }
 
     /**
