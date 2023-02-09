@@ -180,7 +180,7 @@ public class TicTacToe extends UnicastRemoteObject implements TTT_Interface {
     /**
      * Créé un TicTacToe, instancie une structure TTT_Data().
      * 
-     * @throws RemoteException
+     * @throws RemoteException -
      */
     public TicTacToe() throws RemoteException {
         this.X_player_id = -5;

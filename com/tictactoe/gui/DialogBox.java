@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  */
 public class DialogBox extends JOptionPane {
 
-    /** TODO */
+    /** Fenêtre contenant la boite */
     private JFrame parentFrame;
     /** Le code pour donner plus d'informations à l'utilisateur */
     private int code;
@@ -20,8 +20,8 @@ public class DialogBox extends JOptionPane {
     private String body;
 
     /**
-     * TODO
-     * @param parent TODO
+     * Créer une boite de dialogue.
+     * @param parent fenêtre contenant la boite
      */
     public DialogBox(JFrame parent) {
         this.parentFrame = parent;
@@ -69,8 +69,8 @@ public class DialogBox extends JOptionPane {
     }
 
     /**
-     * TODO
-     * @param args TODO
+     * Test
+     * @param args -
      */
     public static void main(final String[] args) {
         final JFrame parent = new JFrame();

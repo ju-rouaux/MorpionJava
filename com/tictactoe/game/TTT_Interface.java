@@ -17,7 +17,7 @@ public interface TTT_Interface extends Remote {
      * @param player_id  l'identifiant de joueur voulant jouer.
      * @param cell_index index de la case sur laquelle jouer.
      * @return vrai si le symbole a été placé, faux sinon.
-     * @throws RemoteException { }
+     * @throws RemoteException  -
      */
     public boolean playTurn(int player_id, int cell_index) throws RemoteException;
 
@@ -25,7 +25,7 @@ public interface TTT_Interface extends Remote {
      * Retourne les données de la partie.
      * 
      * @return les données de la partie.
-     * @throws RemoteException { }
+     * @throws RemoteException  -
      */
     public TTT_Data fetchData() throws RemoteException;
 
@@ -35,7 +35,7 @@ public interface TTT_Interface extends Remote {
      * Retourne un identifiant compris dans l'interval [0, 499].
      * 
      * @return l'identifiant, -1 si la place est prise.
-     * @throws RemoteException { }
+     * @throws RemoteException  -
      */
     public int connectAsX() throws RemoteException;
 
@@ -45,7 +45,7 @@ public interface TTT_Interface extends Remote {
      * Retourne un identifiant compris dans l'interval [500, 999].
      * 
      * @return l'identifiant, -1 si la place est prise.
-     * @throws RemoteException { }
+     * @throws RemoteException  -
      */
     public int connectAsO() throws RemoteException;
 
@@ -55,7 +55,7 @@ public interface TTT_Interface extends Remote {
      * Si le joueur était en attente d'un autre joueur, il libère sa place.
      * 
      * @param player_id l'identifiant du joueur souhaitant se déconnecter.
-     * @throws RemoteException { }
+     * @throws RemoteException  -
      */
     public void disconnect(int player_id) throws RemoteException;
 }

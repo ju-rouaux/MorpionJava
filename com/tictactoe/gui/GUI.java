@@ -23,7 +23,9 @@ import java.awt.event.WindowEvent;
  */
 public class GUI extends JFrame {
 
+    /** Largeur de la grille */
     public static final int WIDTH = 600;
+    /** Hauteur de la grille */
     public static final int HEIGHT = 400;
 
     /** Message indiquant à l'utilisateur l'action à réaliser */
