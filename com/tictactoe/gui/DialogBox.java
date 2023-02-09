@@ -4,53 +4,27 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- * TODO : commentaires et retirer les warning
+ * Classe pour afficher des boîtes de dialogue
  */
 public class DialogBox extends JOptionPane {
     private JFrame parentFrame;
-    private int code;
-    private String title;
-    private String body;
-    private int DialogBoxType;
-
-    int MESSAGE = -1;
-    int QUESTION = 3;
-    int INFORMATION = 1;
-    int WARNING = 2;
-    int ERROR = 0;
+    private int code;            // Le code pour donner plus d'informations à l'utilisateur
+    private String title;        // Le titre de la boîte de dialogue
+    private String body;         // Le corps de la boîte de dialogue
 
     public DialogBox(JFrame parent) {
         this.parentFrame = parent;
         this.code = 0;
         this.title = null;
         this.body = null;
-        this.DialogBoxType = -2;
     }
 
     /**
-     * Sets the type of the DialogBox. You must specify one of the following
-     * choices:
+     * Définit tous les paramètres de la boîte de dialogue
      * 
-     * @param type
-     *             <code>MESSAGE</code>,
-     *             <code>QUESTION</code>,
-     *             <code>INFORMATION</code>,
-     *             <code>WARNING</code>,
-     *             or <code>ERROR</code>
-     * 
-     */
-
-    public void setDialogBoxType(int type) {
-        this.DialogBoxType = type;
-    }
-
-    /**
-     * Sets all the parameters of the DialogBox. You must specify one of the
-     * following choices:
-     *
-     * @param title The title string for the dialog
-     * @param body  The body string for the dialog
-     * @param code  A code to display, in order to give user further information
+     * @param title Le titre de la boîte de dialogue
+     * @param body  Le corps de la boîte de dialogue
+     * @param code  Le code pour donner plus d'informations à l'utilisateur
      */
     public void setDialogBox(String title, String body, int code) {
         this.code = code;
@@ -58,6 +32,11 @@ public class DialogBox extends JOptionPane {
         this.body = body;
     }
 
+    /**
+     * Affiche une boîte de dialogue de type message
+     * 
+     * @param messageType le type de message à afficher
+     */
     public void displayMessageDialogBox(int messageType) {
         if (this.code != 0)
             this.body += "\nError code : " + this.code;
@@ -65,6 +44,12 @@ public class DialogBox extends JOptionPane {
         JOptionPane.showMessageDialog(this.parentFrame, this.body, this.title, messageType);
     }
 
+    /**
+     * Affiche une boîte de dialogue de type confirmation
+     * 
+     * @param optionType le type d'options à afficher (Oui/Non/Annuler)
+     * @return le choix de l'utilisateur (0 = Oui, 1 = Non, 2 = Annuler)
+     */
     public int displayConfirmDialogBox(int optionType) {
         if (this.code != 0)
             this.body += "\nError code : " + this.code;
@@ -92,6 +77,5 @@ public class DialogBox extends JOptionPane {
             System.out.println("cancel");
             break;
         }
-        //System.out.println(dial.displayConfirmDialogBox(YES_NO_CANCEL_OPTION));
     }
 }

@@ -56,6 +56,7 @@ public class Client {
             client_id = game.connectAsX();
             if(client_id != -1) {
                 System.out.println("Identifiant attribué par le serveur : " + client_id);
+                gui.setSymbole("Vous ête le joueur X");
                 return true;
             }
         } catch (RemoteException e) {
@@ -81,6 +82,7 @@ public class Client {
             client_id = game.connectAsO();
             if(client_id != -1) {
                 System.out.println("Identifiant attribué par le serveur : " + client_id);
+                gui.setSymbole("Vous ête le joueur O");
                 return true;
             }
         } catch (RemoteException e) {

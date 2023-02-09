@@ -26,6 +26,7 @@ public class GUI extends JFrame {
     public static final int HEIGHT = 400;
 
     private JLabel message_label;
+    private JLabel symbole_label;
     private GridPannel grid;
     private JButton button_X;
     private JButton button_O;
@@ -64,6 +65,10 @@ public class GUI extends JFrame {
         message_label = new JLabel("<html><p>En attente des joueurs...</p></html>", JLabel.CENTER);
         message_label.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(message_label);
+
+        symbole_label = new JLabel("<html><p></p></html>", JLabel.CENTER);
+        symbole_label.setAlignmentX(CENTER_ALIGNMENT);
+        left_box.add(symbole_label);
 
         left_box.add(Box.createRigidArea(new Dimension(0, 120)));
 
@@ -189,6 +194,14 @@ public class GUI extends JFrame {
      */
     public void setMessage(String message) {
         this.message_label.setText(message);
+    }
+
+    /**
+     * Change le symbole correspondant au joueur.
+     * @param message Le symbole attribué au joueur.
+     */
+    public void setSymbole(String symbole) {
+        this.symbole_label.setText(symbole);
     }
 
     /**
