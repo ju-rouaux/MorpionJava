@@ -62,11 +62,11 @@ public class GUI extends JFrame {
 
         left_box.add(Box.createRigidArea(new Dimension(0, 80)));
 
-        message_label = new JLabel("<html><p>En attente des joueurs...</p></html>", JLabel.CENTER);
+        message_label = new JLabel("En attente des joueurs...", JLabel.CENTER);
         message_label.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(message_label);
 
-        symbole_label = new JLabel("<html><p></p></html>", JLabel.CENTER);
+        symbole_label = new JLabel("", JLabel.CENTER);
         symbole_label.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(symbole_label);
 
