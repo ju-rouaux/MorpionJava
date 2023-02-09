@@ -5,13 +5,24 @@ import javax.swing.JOptionPane;
 
 /**
  * Classe pour afficher des boîtes de dialogue
+ * 
+ * @author Elias Okat
  */
 public class DialogBox extends JOptionPane {
-    private JFrame parentFrame;
-    private int code;            // Le code pour donner plus d'informations à l'utilisateur
-    private String title;        // Le titre de la boîte de dialogue
-    private String body;         // Le corps de la boîte de dialogue
 
+    /** TODO */
+    private JFrame parentFrame;
+    /** Le code pour donner plus d'informations à l'utilisateur */
+    private int code;
+    /** Le titre de la boîte de dialogue */
+    private String title;
+    /** Le corps de la boîte de dialogue */
+    private String body;
+
+    /**
+     * TODO
+     * @param parent TODO
+     */
     public DialogBox(JFrame parent) {
         this.parentFrame = parent;
         this.code = 0;
@@ -57,6 +68,10 @@ public class DialogBox extends JOptionPane {
         return JOptionPane.showConfirmDialog(this.parentFrame, this.body, this.title, optionType);
     }
 
+    /**
+     * TODO
+     * @param args TODO
+     */
     public static void main(final String[] args) {
         final JFrame parent = new JFrame();
 

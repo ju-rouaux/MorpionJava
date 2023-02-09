@@ -18,17 +18,19 @@ import java.awt.event.WindowEvent;
 
 /**
  * Interface graphique du jeu.
+ * 
  * @author Julien Rouaux - Elias Okat
  */
 public class GUI extends JFrame {
-
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 400;
-
+    /** Message indiquant à l'utilisateur l'action à réaliser */
     private JLabel message_label;
+    /** Affichage du symbole représentant le joueur */
     private JLabel symbole_label;
+    /** Affichage de la grille de morpion */
     private GridPannel grid;
+    /** Bouton de connexion en tant que joueur X */
     private JButton button_X;
+    /** Bouton de connexion en tant que joueur O */
     private JButton button_O;
 
     /**
@@ -39,7 +41,6 @@ public class GUI extends JFrame {
 
         this.setResizable(false);
         this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.LINE_AXIS));
-
 
         // Fenêtre de dialogue à la fermeture du programme.
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -54,7 +55,7 @@ public class GUI extends JFrame {
         // Menu
         Box left_box = new Box(BoxLayout.Y_AXIS);
         left_box.setAlignmentY(CENTER_ALIGNMENT);
-        left_box.setPreferredSize(new Dimension(WIDTH / 3, HEIGHT));
+        left_box.setPreferredSize(new Dimension(200, 400));
 
         JLabel title = new JLabel("<html><h1>TicTacToe</h1></html>", JLabel.CENTER);
         title.setAlignmentX(CENTER_ALIGNMENT);
@@ -76,7 +77,7 @@ public class GUI extends JFrame {
         this.enable_X(true);
         this.button_X.setAlignmentX(CENTER_ALIGNMENT);
         left_box.add(this.button_X);
-        
+
         left_box.add(Box.createRigidArea(new Dimension(10, 10)));
 
         this.button_O = new JButton("JOUER \"O\"");
@@ -100,6 +101,7 @@ public class GUI extends JFrame {
 
     /**
      * TODO
+     * 
      * @param Title
      * @param body
      * @param errorCode
@@ -112,18 +114,20 @@ public class GUI extends JFrame {
 
     /**
      * TODO
+     * 
      * @param Title
      * @param body
      */
     void displayMessageDialogBox(String Title, String body) {
         DialogBox dial = new DialogBox(this);
-        
+
         dial.setDialogBox(Title, body, 0);
         dial.displayMessageDialogBox(JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
      * TODO
+     * 
      * @param Title
      * @param body
      * @param option
@@ -131,25 +135,25 @@ public class GUI extends JFrame {
      */
     int displayConfirmDialogBox(String Title, String body, int option) {
         DialogBox dial = new DialogBox(this);
-        
+
         dial.setDialogBox(Title, body, 0);
         return dial.displayConfirmDialogBox(option);
     }
 
     /**
      * TODO
+     * 
      * @return
      */
-    boolean exitGame()
-    {
-        int reponse = displayConfirmDialogBox("TictacToe","Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?",JOptionPane.YES_NO_OPTION);
-        
+    boolean exitGame() {
+        int reponse = displayConfirmDialogBox("TictacToe",
+                "Votre partie est toujours en cours, êtes vous sur de vouloirs quitter ?", JOptionPane.YES_NO_OPTION);
+
         if (reponse == 0) {
             if (Client.disconnect()) {
-                this.displayMessageDialogBox("Information","Vous avez bien été déconnecté");
-            } 
-            else {
-                this.displayMessageDialogBox("Information","Vous n'avez pas pu être correctement déconnecté");
+                this.displayMessageDialogBox("Information", "Vous avez bien été déconnecté");
+            } else {
+                this.displayMessageDialogBox("Information", "Vous n'avez pas pu être correctement déconnecté");
             }
         }
 
@@ -166,6 +170,7 @@ public class GUI extends JFrame {
 
     /**
      * Active les cellules de la grille dont les index sont donnés en paramètre.
+     * 
      * @param cells Les index des cellules à activer.
      */
     public void activateCells(Integer[] cells) {
@@ -173,7 +178,9 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Met en surbrillance (encadré rouge) les cellules dont les index sont donnés en paramètre.
+     * Met en surbrillance (encadré rouge) les cellules dont les index sont donnés
+     * en paramètre.
+     * 
      * @param cells Les index des cellules à mettre en surbrillance.
      */
     public void highlight(int[] cells) {
@@ -181,7 +188,9 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Change le texte contenu dans les cellules par le caractère donné au même index que l'index de la cellule.
+     * Change le texte contenu dans les cellules par le caractère donné au même
+     * index que l'index de la cellule.
+     * 
      * @param cells Les caractères que doivent contenir chaque cellule.
      */
     public void updateGridText(char[] cells) {
@@ -190,6 +199,7 @@ public class GUI extends JFrame {
 
     /**
      * Change le message affiché à gauche de l'interface.
+     * 
      * @param message Le nouveau message.
      */
     public void setMessage(String message) {
@@ -198,7 +208,8 @@ public class GUI extends JFrame {
 
     /**
      * Change le symbole correspondant au joueur.
-     * @param message Le symbole attribué au joueur.
+     * 
+     * @param symbole le symbole attribué au joueur.
      */
     public void setSymbole(String symbole) {
         this.symbole_label.setText(symbole);
@@ -213,14 +224,15 @@ public class GUI extends JFrame {
 
     /**
      * Active ou désactive le bouton de connexion en tant que joueur X.
+     * 
      * @param b Vrai pour activer le bouton, faux pour le désactiver.
      */
     public void enable_X(boolean b) {
         this.button_X.setEnabled(b);
 
         if (b == true) {
-            //Prévenir l'ajout de multiple actionListener inutilement.
-            if(this.button_X.getActionListeners().length == 0)
+            // Prévenir l'ajout de multiple actionListener inutilement.
+            if (this.button_X.getActionListeners().length == 0)
                 this.button_X.addActionListener((ActionEvent e) -> Client.connectAsX());
             this.button_X.setText("Jouer \"X\"");
         } else {
@@ -231,14 +243,15 @@ public class GUI extends JFrame {
 
     /**
      * Active ou désactive le bouton de connexion en tant que joueur O.
+     * 
      * @param b Vrai pour activer le bouton, faux pour le désactiver.
      */
     public void enable_O(boolean b) {
         this.button_O.setEnabled(b);
 
         if (b == true) {
-            //Prévenir l'ajout de multiple actionListener inutilement.
-            if(this.button_O.getActionListeners().length == 0)
+            // Prévenir l'ajout de multiple actionListener inutilement.
+            if (this.button_O.getActionListeners().length == 0)
                 this.button_O.addActionListener((ActionEvent e) -> Client.connectAsO());
             this.button_O.setText("Jouer \"O\"");
         } else {
