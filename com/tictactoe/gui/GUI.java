@@ -22,6 +22,10 @@ import java.awt.event.WindowEvent;
  * @author Julien Rouaux - Elias Okat
  */
 public class GUI extends JFrame {
+
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 400;
+
     /** Message indiquant à l'utilisateur l'action à réaliser */
     private JLabel message_label;
     /** Affichage du symbole représentant le joueur */
@@ -55,7 +59,7 @@ public class GUI extends JFrame {
         // Menu
         Box left_box = new Box(BoxLayout.Y_AXIS);
         left_box.setAlignmentY(CENTER_ALIGNMENT);
-        left_box.setPreferredSize(new Dimension(200, 400));
+        left_box.setPreferredSize(new Dimension(WIDTH/3, HEIGHT));
 
         JLabel title = new JLabel("<html><h1>TicTacToe</h1></html>", JLabel.CENTER);
         title.setAlignmentX(CENTER_ALIGNMENT);

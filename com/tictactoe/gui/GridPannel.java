@@ -58,7 +58,10 @@ class GridPannel extends JPanel {
 
         this.setPreferredSize(new Dimension(GUI.HEIGHT, GUI.HEIGHT));
 
-        this.setLayout(new GridLayout(3, 3));
+        GridLayout layout = new GridLayout(3, 3);
+        layout.setHgap(5);
+        layout.setVgap(5);
+        this.setLayout(layout);
         for (JButton button : buttons)
             this.add(button);
 
